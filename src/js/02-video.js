@@ -1,21 +1,17 @@
 import Player from '@vimeo/player';
+import throttle from 'lodash-es/throttle';
 
-const player = new Player('vimeo-player', {
-  id: 'vimeo-player',
-  width: 640,
-});
+const player = new Player('vimeo-player');
 
-player.on('timeupdate', saveCurrentTime);
+const saveCurrentTimeThrottled = throttle(e => {
+  player.getCurrentTime().then(seconds => {
+    localStorage.setItem('videoplayer-current-time', seconds);
+  });
+}, 1000); // Оновлюємо не частіше, ніж раз на секунду
 
-function saveCurrentTime() {
-  player
-    .getCurrentTime()
-    .then(function (seconds) {
-      localStorage.setItem('videoplayer-current-time', seconds);
-    })
-    .catch(function (error) {
-      
-    });
-  let savedTime = localStorage.getItem('videoplayer-current-time');
-  let currentTime = JSON.parse(savedTime);
+player.on('timeupdate', saveCurrentTimeThrottled);
+
+const savedTime = localStorage.getItem('videoplayer-current-time');
+if (savedTime !== null) {
+  player.setCurrentTime(parseFloat(savedTime));
 }
