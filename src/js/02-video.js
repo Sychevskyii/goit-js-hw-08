@@ -7,7 +7,7 @@ const saveCurrentTimeThrottled = throttle(e => {
   player.getCurrentTime().then(seconds => {
     localStorage.setItem('videoplayer-current-time', seconds);
   });
-}, 1000); // Оновлюємо не частіше, ніж раз на секунду
+}, 1000);
 
 player.on('timeupdate', saveCurrentTimeThrottled);
 
