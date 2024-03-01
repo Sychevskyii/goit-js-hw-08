@@ -18,6 +18,8 @@ function onSaveFormData(e) {
   const stringFormData = JSON.stringify(formData);
 
   localStorage.setItem(FEEDBACK_KEY, stringFormData);
+
+  parsedFormData = formData;
 }
 
 const stringFormData = localStorage.getItem(FEEDBACK_KEY);
@@ -36,11 +38,11 @@ function setInputsValue() {
 function onSubmitForm(e) {
   e.preventDefault();
 
-  formEl.reset();
-  
   console.log(parsedFormData);
 
   localStorage.removeItem(FEEDBACK_KEY);
+
+  formEl.reset();
 }
 
 
