@@ -12,22 +12,20 @@ buttonEl.addEventListener('click', onSubmitForm);
 
 let formData = {};
 
+const stringFormData = localStorage.getItem(FEEDBACK_KEY);
+let parsedFormData = stringFormData ? JSON.parse(stringFormData) : {};
+
+setInputsValue();
+
 function onSaveFormData(e) {
   formData[e.target.name] = e.target.value;
 
-  const stringFormData = JSON.stringify(formData);
+  const mergedFormData = { ...parsedFormData, ...formData };
+  const stringFormData = JSON.stringify(mergedFormData);
 
   localStorage.setItem(FEEDBACK_KEY, stringFormData);
 
-  parsedFormData = formData;
-}
-
-const stringFormData = localStorage.getItem(FEEDBACK_KEY);
-let parsedFormData = {};
-
-if (stringFormData !== null) {
-  parsedFormData = JSON.parse(stringFormData);
-  setInputsValue();
+  parsedFormData = mergedFormData;
 }
 
 function setInputsValue() {
@@ -38,11 +36,13 @@ function setInputsValue() {
 function onSubmitForm(e) {
   e.preventDefault();
 
+  localStorage.removeItem(FEEDBACK_KEY);
   console.log(parsedFormData);
 
-  localStorage.removeItem(FEEDBACK_KEY);
-
   formEl.reset();
+
+  formData = {};
+
+  parsedFormData = {};
+  setInputsValue();
 }
-
-
